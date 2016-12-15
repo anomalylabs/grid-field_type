@@ -1,0 +1,20 @@
+{{ asset_add('styles.css', 'anomaly.field_type.grid::scss/grid.scss') }}
+
+{{ asset_add("scripts.js", "streams::js/table/jquery-sortable.js") }}
+{{ asset_add('scripts.js', 'anomaly.field_type.grid::js/input.js') }}
+
+<div {{ html_attributes(field_type.attributes) }}>
+
+    <div class="grid-list">
+        {% for form in field_type.forms %}
+            {% include "anomaly.field_type.grid::item" with {'form': form} %}
+        {% endfor %}
+    </div>
+
+    <div class="grid-controls">
+        <a href="/streams/field_type/grid/form/{{ field_type.id() }}" class="add-row btn btn-sm btn-success">
+            {{ trans('anomaly.field_type.grid::input.add_row') }}
+        </a>
+    </div>
+
+</div>

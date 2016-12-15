@@ -1,0 +1,62 @@
+.grid-field_type {
+
+    .grid-container {
+
+        .grid-item {
+            margin: 1rem 0;
+            background: rgba(200, 200, 200, 0.15);
+
+            &.dragged {
+                opacity: 0.2;
+            }
+
+            &.collapsed {
+
+                .grid-body {
+                    display: none;
+                }
+            }
+
+            .grid-loading {
+                padding: 1rem;
+            }
+
+            .grid-item-controls {
+                color: #ffffff;
+                background: #3e3e3e;
+                padding: .5rem $spacer-x;
+
+                a {
+                    color: #ffffff;
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    display: inline-block;
+                }
+
+                .grid-handle {
+                    cursor: move;
+                }
+            }
+
+            .grid-header {
+                padding: 1rem 1rem 0;
+                border-bottom: 1px solid rgba(50, 50, 50, 0.1);
+            }
+
+            .grid-body {
+                padding: 1rem;
+
+                .form-group {
+                    margin-bottom: 2rem;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+}

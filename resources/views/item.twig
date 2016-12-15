@@ -1,0 +1,13 @@
+<div class="grid-item">
+
+    {% include "anomaly.field_type.grid::partials/controls" %}
+
+    <div class="clearfix"></div>
+
+    {% include "anomaly.field_type.grid::partials/fields" %}
+
+    <div class="grid-body">
+        {{ form.getContent()|raw }}
+    </div>
+
+</div>
