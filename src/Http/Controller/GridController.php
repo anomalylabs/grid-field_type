@@ -16,10 +16,34 @@ class GridController extends PublicController
 {
 
     /**
+     * Choose what kind of row to add.
+     *
+     * @param FieldRepositoryInterface $fields
+     * @param                          $field
+     * @return \Illuminate\Contracts\View\View|mixed
+     */
+    public function choose(FieldRepositoryInterface $fields, $field)
+    {
+        /* @var FieldInterface $field */
+        $field = $fields->find($field);
+
+        /* @var GridFieldType $type */
+        $type = $field->getType();
+
+        return $this->view->make(
+            'anomaly.field_type.grid::choose',
+            [
+                'types' => [],
+            ]
+        );
+    }
+
+    /**
      * Return a form row.
      *
      * @param FieldRepositoryInterface $fields
      * @param                          $field
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function form(FieldRepositoryInterface $fields, $field)
     {

@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <button class="close" data-dismiss="modal">
+        <span>&times;</span>
+    </button>
+    <h4 class="modal-title">{{ trans('anomaly.field_type.grid::message.choose_row') }}</h4>
+</div>
+
+<div class="modal-body">
+
+
+    <ul class="nav nav-pills nav-stacked">
+        <li class="nav-item">
+            <a href="{{ url_to('/streams/field_type/grid/form/' ~ route_parameter('field')) }}"
+               class="add-row nav-link">
+                <strong>Test Title</strong>
+                <br>
+                <small>Test the description.</small>
+            </a>
+        </li>
+    </ul>
+
+
+    {% if not types.isEmpty() %}
+        <ul class="nav nav-pills nav-stacked">
+            {% for type in types %}
+                <li class="nav-item">
+                    <a href="{{ url_to('/streams/field_type/grid/form/' ~ route_parameter('field')) }}"
+                       class="add-row nav-link">
+                        <strong>{{ type.name }}</strong>
+                        <br>
+                        <small>{{ type.description }}</small>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {{ trans('streams::message.no_results') }}
+    {% endif %}
+</div>

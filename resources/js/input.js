@@ -5,6 +5,8 @@ $(function () {
     grids.each(function () {
 
         var wrapper = $(this);
+        var field = wrapper.data('field_name');
+        var modal = $('#' + field + '-modal');
         var items = $(this).find('.grid-item');
         var cookie = 'grid:' + $(this).closest('.grid-container').data('field_name');
 
@@ -31,7 +33,7 @@ $(function () {
             }
         });
 
-        wrapper.on('click', '[data-toggle="collapse"]', function() {
+        wrapper.on('click', '[data-toggle="collapse"]', function () {
 
             var toggle = $(this);
             var item = toggle.closest('.grid-item');
@@ -53,7 +55,7 @@ $(function () {
             return false;
         });
 
-        wrapper.indexCollapsed = function() {
+        wrapper.indexCollapsed = function () {
 
             wrapper.find('.grid-list').find('.grid-item').each(function (index) {
 
@@ -124,17 +126,20 @@ $(function () {
 
         wrapper.sort();
 
-        wrapper.find('.add-row').click(function (e) {
+        modal.on('click', '.add-row', function (e) {
 
             e.preventDefault();
 
             var count = wrapper.find('.grid-item').length + 1;
+
+            modal.trigger('loading');
 
             $(wrapper)
                 .find('.grid-list')
                 .append($('<div class="grid-item"><div class="grid-loading">Loading...</div></div>').load($(this).attr('href') + '?instance=' + count, function () {
                     wrapper.sort();
                     wrapper.indexCollapsed();
+                    modal.modal('hide');
                 }));
         });
     });
