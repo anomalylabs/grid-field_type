@@ -3,7 +3,8 @@
     "type": "streams-addon",
     "autoload": {
         "psr-4": {
-            "Anomaly\\GridFieldType\\": "src/"
+            "Anomaly\\GridFieldType\\": "src/",
+            "Anomaly\\GridsModule\\": "addons/anomaly/grids-module/src/"
         }
     }
 }

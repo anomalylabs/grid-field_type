@@ -34,9 +34,10 @@ class GridFieldTypeSchema extends FieldTypeSchema
 
                 $table->integer('entry_id');
                 $table->integer('related_id');
+                $table->integer('related_type');
                 $table->integer('sort_order')->nullable();
 
-                $table->primary(['entry_id', 'related_id'], 'unique-relations');
+                $table->primary(['entry_id', 'related_id', 'related_type'], 'unique-relations');
             }
         );
     }

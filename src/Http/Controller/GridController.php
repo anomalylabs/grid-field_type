@@ -33,7 +33,7 @@ class GridController extends PublicController
         return $this->view->make(
             'anomaly.field_type.grid::choose',
             [
-                'types' => [],
+                'grids' => $type->config('related'),
             ]
         );
     }

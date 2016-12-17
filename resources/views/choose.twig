@@ -6,29 +6,15 @@
 </div>
 
 <div class="modal-body">
-
-
-    <ul class="nav nav-pills nav-stacked">
-        <li class="nav-item">
-            <a href="{{ url_to('/streams/field_type/grid/form/' ~ route_parameter('field')) }}"
-               class="add-row nav-link">
-                <strong>Test Title</strong>
-                <br>
-                <small>Test the description.</small>
-            </a>
-        </li>
-    </ul>
-
-
-    {% if not types.isEmpty() %}
+    {% if not grids.isEmpty() %}
         <ul class="nav nav-pills nav-stacked">
-            {% for type in types %}
+            {% for grid in grids %}
                 <li class="nav-item">
                     <a href="{{ url_to('/streams/field_type/grid/form/' ~ route_parameter('field')) }}"
                        class="add-row nav-link">
-                        <strong>{{ type.name }}</strong>
+                        <strong>{{ grid.name }}</strong>
                         <br>
-                        <small>{{ type.description }}</small>
+                        <small>{{ grid.description }}</small>
                     </a>
                 </li>
             {% endfor %}
