@@ -10,11 +10,11 @@
         <ul class="nav nav-pills nav-stacked">
             {% for grid in grids %}
                 <li class="nav-item">
-                    <a href="{{ url_to('/streams/field_type/grid/form/' ~ route_parameter('field')) }}"
+                    <a href="{{ url_to('/streams/field_type/grid/form/' ~ route_parameter('field')) }}/{{ grid.stream.id }}"
                        class="add-row nav-link">
-                        <strong>{{ grid.name }}</strong>
+                        <strong>{{ grid.stream.name }}</strong>
                         <br>
-                        <small>{{ grid.description }}</small>
+                        <small>{{ grid.stream.description }}</small>
                     </a>
                 </li>
             {% endfor %}

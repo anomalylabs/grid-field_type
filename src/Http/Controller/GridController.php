@@ -4,6 +4,8 @@ use Anomaly\GridFieldType\GridFieldType;
 use Anomaly\Streams\Platform\Field\Contract\FieldInterface;
 use Anomaly\Streams\Platform\Field\Contract\FieldRepositoryInterface;
 use Anomaly\Streams\Platform\Http\Controller\PublicController;
+use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
+use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 
 /**
  * Class GridController
@@ -30,10 +32,17 @@ class GridController extends PublicController
         /* @var GridFieldType $type */
         $type = $field->getType();
 
+        $type->setPrefix($this->request->get('prefix'));
+
         return $this->view->make(
             'anomaly.field_type.grid::choose',
             [
-                'grids' => $type->config('related'),
+                'grids' => array_map(
+                    function ($model) {
+                        return app($model);
+                    },
+                    $type->config('related')
+                ),
             ]
         );
     }
@@ -41,20 +50,28 @@ class GridController extends PublicController
     /**
      * Return a form row.
      *
-     * @param FieldRepositoryInterface $fields
-     * @param                          $field
+     * @param FieldRepositoryInterface  $fields
+     * @param StreamRepositoryInterface $streams
+     * @param                           $field
+     * @param                           $stream
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function form(FieldRepositoryInterface $fields, $field)
-    {
+    public function form(
+        FieldRepositoryInterface $fields,
+        StreamRepositoryInterface $streams,
+        $field,
+        $stream
+    ) {
         /* @var FieldInterface $field */
-        $field = $fields->find($field);
+        /* @var StreamInterface $stream */
+        $field  = $fields->find($field);
+        $stream = $streams->find($stream);
 
         /* @var GridFieldType $type */
         $type = $field->getType();
 
         return $type
-            ->form($field, $this->request->get('instance'))
+            ->form($field, $stream, $this->request->get('instance'))
             ->addFormData('field_type', $type)
             ->render();
     }

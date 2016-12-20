@@ -2,15 +2,16 @@
 
 use Anomaly\GridFieldType\Command\GetMultiformFromPost;
 use Anomaly\GridFieldType\Command\GetMultiformFromValue;
+use Anomaly\GridFieldType\Grid\GridModel;
+use Anomaly\GridFieldType\Grid\GridRelation;
 use Anomaly\GridFieldType\Validation\ValidateGrid;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
-use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Anomaly\Streams\Platform\Field\Contract\FieldInterface;
 use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
 use Anomaly\Streams\Platform\Ui\Form\Multiple\MultipleFormBuilder;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class GridFieldType
@@ -102,19 +103,15 @@ class GridFieldType extends FieldType
     /**
      * Get the relation.
      *
-     * @return BelongsToMany
+     * @return GridRelation
      */
     public function getRelation()
     {
         $entry = $this->getEntry();
         $model = $this->getRelatedModel();
 
-        return $entry->belongsToMany(
-            get_class($model),
-            $this->getPivotTableName(),
-            'entry_id',
-            'related_id'
-        )->orderBy($this->getPivotTableName() . '.sort_order', 'ASC');
+        return (new GridRelation($model->newQuery(), $entry, $model->getTable() . '.' . 'related_id', 'id'))
+            ->orderBy($this->getPivotTableName() . '.sort_order', 'ASC');
     }
 
     /**
@@ -130,23 +127,11 @@ class GridFieldType extends FieldType
     /**
      * Get the related model.
      *
-     * @return null|EntryInterface
+     * @return null|Model
      */
     public function getRelatedModel()
     {
-        return $this->container->make($this->config('related'));
-    }
-
-    /**
-     * Get the related stream.
-     *
-     * @return null|StreamInterface
-     */
-    public function getRelatedStream()
-    {
-        $model = $this->getRelatedModel();
-
-        return $model->getStream();
+        return (new GridModel())->setTable($this->getPivotTableName());
     }
 
     /**
@@ -214,24 +199,23 @@ class GridFieldType extends FieldType
     /**
      * Return a form builder instance.
      *
-     * @param FieldInterface $field
-     * @param null           $instance
+     * @param FieldInterface  $field
+     * @param StreamInterface $stream
+     * @param null            $instance
      * @return FormBuilder
      */
-    public function form(FieldInterface $field, $instance = null)
+    public function form(FieldInterface $field, StreamInterface $stream, $instance = null)
     {
-        /* @var StreamInterface $stream */
-        $stream = $this->getRelatedStream();
-
         /* @var FormBuilder $builder */
         $builder = app(FormBuilder::class)
             ->setModel($stream->getEntryModel())
             ->setOption('grid_instance', $instance)
             ->setOption('grid_field', $field->getId())
+            ->setOption('grid_title', $stream->getName())
             ->setOption('grid_prefix', $this->getFieldName())
             ->setOption('form_view', 'anomaly.field_type.grid::form')
             ->setOption('wrapper_view', 'anomaly.field_type.grid::wrapper')
-            ->setOption('prefix', $this->getField() . '_' . $instance . '_');
+            ->setOption('prefix', $this->getFieldName() . '_' . $instance . '_');
 
         return $builder;
     }
@@ -288,25 +272,12 @@ class GridFieldType extends FieldType
             function ($builder) {
 
                 /* @var FormBuilder $builder */
-                return $builder->getFormEntryId();
+                return [
+                    'related_id' => $this->entry->getId(),
+                    'entry_id'   => $builder->getFormEntryId(),
+                    'entry_type' => get_class($builder->getFormEntry()),
+                ];
             }
         )->all();
-    }
-
-    /**
-     * Get the placeholder.
-     *
-     * @return null
-     */
-    public function getPlaceholder()
-    {
-        /* @var StreamInterface $stream */
-        $stream = $this->getRelatedStream();
-
-        if ($this->placeholder == null) {
-            $this->setPlaceholder(str_singular(trans($stream->getName())));
-        }
-
-        return $this->placeholder;
     }
 }

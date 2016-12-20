@@ -1,5 +1,6 @@
 <?php namespace Anomaly\GridFieldType\Command;
 
+use Anomaly\GridFieldType\Grid\GridModel;
 use Anomaly\GridFieldType\GridFieldType;
 use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Anomaly\Streams\Platform\Entry\EntryCollection;
@@ -48,18 +49,23 @@ class GetMultiformFromRelation
             return null;
         }
 
-        /* @var EntryInterface $entry */
-        foreach ($value as $instance => $entry) {
+        /* @var GridModel $grid */
+        foreach ($value as $instance => $grid) {
 
             /* @var FieldInterface $field */
             if (!$field = $fields->find($this->fieldType->id())) {
                 continue;
             }
 
+            /* @var EntryInterface $entry */
+            $entry = $grid->getEntry();
+
             /* @var GridFieldType $type */
             $type = $field->getType();
 
-            $form = $type->form($field, $instance)->setEntry($entry->getId());
+            $type->setPrefix($this->fieldType->getPrefix());
+
+            $form = $type->form($field, $entry->getStream(), $instance)->setEntry($entry->getId());
 
             $forms->addForm($this->fieldType->getFieldName() . '_' . $instance, $form);
         }

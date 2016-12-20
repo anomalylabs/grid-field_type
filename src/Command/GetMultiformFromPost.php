@@ -3,6 +3,8 @@
 use Anomaly\GridFieldType\GridFieldType;
 use Anomaly\Streams\Platform\Field\Contract\FieldInterface;
 use Anomaly\Streams\Platform\Field\Contract\FieldRepositoryInterface;
+use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
+use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 use Anomaly\Streams\Platform\Ui\Form\Multiple\MultipleFormBuilder;
 use Illuminate\Http\Request;
 
@@ -36,12 +38,13 @@ class GetMultiformFromPost
     /**
      * Handle the command.
      *
-     * @param FieldRepositoryInterface $fields
-     * @param MultipleFormBuilder      $forms
-     * @param Request                  $request
+     * @param StreamRepositoryInterface $streams
+     * @param FieldRepositoryInterface  $fields
+     * @param MultipleFormBuilder       $forms
+     * @param Request                   $request
      * @return MultipleFormBuilder|null
      */
-    public function handle(FieldRepositoryInterface $fields, MultipleFormBuilder $forms, Request $request)
+    public function handle(StreamRepositoryInterface $streams, FieldRepositoryInterface $fields, MultipleFormBuilder $forms, Request $request)
     {
         if (!$request->has($this->fieldType->getFieldName())) {
             return null;
@@ -54,19 +57,28 @@ class GetMultiformFromPost
                 continue;
             }
 
+            /* @var StreamInterface $stream */
+            if (!$stream = $streams->find($item['stream'])) {
+                continue;
+            }
+
             /* @var GridFieldType $type */
             $type = $field->getType();
 
-            $form = $type->form($field, $item['instance']);
+            $type->setPrefix($this->fieldType->getPrefix());
+
+            $form = $type->form($field, $stream, $item['instance']);
 
             if ($item['entry']) {
                 $form->setEntry($item['entry']);
             }
+
             try {
                 $form->build();
             } catch(\Exception $e) {
                 dd($item);
             }
+
             $forms->addForm($this->fieldType->getFieldName() . '_' . $item['instance'], $form);
         }
 

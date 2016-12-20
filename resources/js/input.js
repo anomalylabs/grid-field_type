@@ -136,7 +136,7 @@ $(function () {
 
             $(wrapper)
                 .find('.grid-list')
-                .append($('<div class="grid-item"><div class="grid-loading">Loading...</div></div>').load($(this).attr('href') + '?instance=' + count, function () {
+                .append($('<div class="grid-item"><div class="grid-loading">Loading...</div></div>').load($(this).attr('href') + '&instance=' + count, function () {
                     wrapper.sort();
                     wrapper.indexCollapsed();
                     modal.modal('hide');

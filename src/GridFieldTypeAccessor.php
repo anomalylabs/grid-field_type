@@ -44,13 +44,16 @@ class GridFieldTypeAccessor extends FieldTypeAccessor
             $value = $this->organizeSyncValue([$value->getId()]);
         }
 
-        if (!$value) {
-            $this->fieldType->getRelation()->detach();
+        $this->fieldType->getRelation()->getBaseQuery()->where(
+            'related_id',
+            $this->fieldType->getEntry()->getId()
+        )->delete();
 
+        if (!$value) {
             return;
         }
 
-        $this->fieldType->getRelation()->sync($value);
+        $this->fieldType->getRelation()->createMany($value);
     }
 
     /**
@@ -61,17 +64,16 @@ class GridFieldTypeAccessor extends FieldTypeAccessor
      */
     protected function organizeSyncValue(array $value)
     {
-        $value = array_filter(array_values(array_unique($value)));
+        $value = array_filter(array_values($value));
 
-        return array_combine(
-            array_values($value),
-            array_map(
-                function ($key) {
-                    return ['sort_order' => $key];
-                },
-                array_keys($value)
-            )
+        array_walk(
+            $value,
+            function (&$data, $key) {
+                $data['sort_order'] = $key;
+            }
         );
+
+        return $value;
     }
 
     /**
