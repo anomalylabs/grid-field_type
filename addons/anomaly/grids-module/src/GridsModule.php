@@ -17,7 +17,7 @@ class GridsModule extends Module
      *
      * @var string
      */
-    protected $icon = 'fa fa-th';
+    protected $icon = 'fa fa-th-list';
 
     /**
      * The addon sections.
