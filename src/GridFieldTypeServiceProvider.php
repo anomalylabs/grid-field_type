@@ -1,9 +1,8 @@
 <?php namespace Anomaly\GridFieldType;
 
+use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Addon\AddonIntegrator;
 use Anomaly\Streams\Platform\Addon\AddonServiceProvider;
-use Anomaly\Streams\Platform\Ui\Breadcrumb\BreadcrumbCollection;
-use Illuminate\Http\Request;
 
 /**
  * Class GridFieldTypeServiceProvider
@@ -29,22 +28,18 @@ class GridFieldTypeServiceProvider extends AddonServiceProvider
     /**
      * Register the addon.
      *
-     * @param AddonIntegrator      $integrator
-     * @param Request              $request
-     * @param BreadcrumbCollection $breadcrumb
+     * @param AddonIntegrator $integrator
+     * @param AddonCollection $addons
      */
-    public function register(AddonIntegrator $integrator, Request $request, BreadcrumbCollection $breadcrumb)
+    public function register(AddonIntegrator $integrator, AddonCollection $addons)
     {
-        if ($request->segment(2) == 'grids') {
+        $addon = $integrator->register(
+            __DIR__ . '/../addons/anomaly/grids-module/',
+            'anomaly.module.grids',
+            true,
+            true
+        );
 
-            $breadcrumb->add('anomaly.module.grids::addon.name', 'admin/grids');
-
-            $integrator->register(
-                __DIR__ . '/../addons/anomaly/grids-module/',
-                'anomaly.module.grids',
-                true,
-                true
-            );
-        }
+        $addons->push($addon);
     }
 }

@@ -2,7 +2,10 @@
 
 return [
     'related' => [
-        'label' => 'Related Streams',
+        'label'        => 'Grids',
+        'instructions' => 'Specify the related <a href="' . url(
+                'admin/grids'
+            ) . '" target="_blank">grids</a>.',
     ],
     'min'     => [
         'label'        => 'Minimum Items',

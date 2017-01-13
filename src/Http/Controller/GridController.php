@@ -32,8 +32,6 @@ class GridController extends PublicController
         /* @var GridFieldType $type */
         $type = $field->getType();
 
-        $type->setPrefix($this->request->get('prefix'));
-
         return $this->view->make(
             'anomaly.field_type.grid::choose',
             [
@@ -69,6 +67,8 @@ class GridController extends PublicController
 
         /* @var GridFieldType $type */
         $type = $field->getType();
+
+        $type->setPrefix($this->request->get('prefix'));
 
         return $type
             ->form($field, $stream, $this->request->get('instance'))
