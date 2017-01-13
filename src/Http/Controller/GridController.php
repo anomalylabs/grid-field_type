@@ -24,13 +24,24 @@ class GridController extends PublicController
      * @param                          $field
      * @return \Illuminate\Contracts\View\View|mixed
      */
-    public function choose(FieldRepositoryInterface $fields, $field)
+    public function choose(FieldRepositoryInterface $fields, StreamRepositoryInterface $streams, $field)
     {
         /* @var FieldInterface $field */
         $field = $fields->find($field);
 
         /* @var GridFieldType $type */
         $type = $field->getType();
+
+        $related = $type->config('related', []);
+
+        if (!$related) {
+            $related = array_map(
+                function (StreamInterface $stream) {
+                    return $stream->getEntryModelName();
+                },
+                $streams->findAllByNamespace('grid')->all()
+            );
+        }
 
         return $this->view->make(
             'anomaly.field_type.grid::choose',
@@ -39,7 +50,7 @@ class GridController extends PublicController
                     function ($model) {
                         return app($model);
                     },
-                    $type->config('related')
+                    $related
                 ),
             ]
         );
