@@ -1,8 +1,10 @@
 $(function () {
 
-    var grids = $('[data-provides="anomaly.field_type.grid"]');
+    var grids = $('[data-provides="anomaly.field_type.grid"]:not([data-initialized])');
 
     grids.each(function () {
+
+        $(this).attr('data-initialized', '');
 
         var wrapper = $(this);
         var field = wrapper.data('field_name');
