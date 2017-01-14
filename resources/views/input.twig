@@ -14,7 +14,12 @@
     <div class="grid-controls">
         <a href="{{ url('streams/field_type/grid/choose/' ~ field_type.id() ~ '?prefix=' ~ field_type.prefix) }}"
            data-toggle="modal" data-target="#{{ field_type.field_name }}-modal" class="btn btn-sm btn-success">
-            {{ trans('anomaly.field_type.grid::input.add_row') }}
+            {{ trans('anomaly.field_type.grid::button.add_row') }}
+        </a>
+
+        <a href="{{ url('admin/grids') }}" class="btn btn-sm btn-warning" target="_blank">
+            {{ icon('fa fa-wrench') }}
+            {{ trans('anomaly.field_type.repeater::button.manage') }}
         </a>
     </div>
 
