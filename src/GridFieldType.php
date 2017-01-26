@@ -52,6 +52,15 @@ class GridFieldType extends FieldType
     protected $filterView = 'anomaly.field_type.grid::filter';
 
     /**
+     * The field type config.
+     *
+     * @var array
+     */
+    protected $config = [
+        'manage' => true,
+    ];
+    
+    /**
      * The field rules.
      *
      * @var array
