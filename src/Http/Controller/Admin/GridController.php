@@ -1,9 +1,9 @@
-<?php namespace Anomaly\GridFieldType\Http\Controller;
+<?php namespace Anomaly\GridFieldType\Http\Controller\Admin;
 
 use Anomaly\GridFieldType\GridFieldType;
 use Anomaly\Streams\Platform\Field\Contract\FieldInterface;
 use Anomaly\Streams\Platform\Field\Contract\FieldRepositoryInterface;
-use Anomaly\Streams\Platform\Http\Controller\PublicController;
+use Anomaly\Streams\Platform\Http\Controller\AdminController;
 use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
 use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 
@@ -14,7 +14,7 @@ use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
  * @author PyroCMS, Inc. <support@pyrocms.com>
  * @author Ryan Thompson <ryan@pyrocms.com>
  */
-class GridController extends PublicController
+class GridController extends AdminController
 {
 
     /**
