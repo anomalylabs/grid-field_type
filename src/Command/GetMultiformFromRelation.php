@@ -57,8 +57,15 @@ class GetMultiformFromRelation
                 continue;
             }
 
-            /* @var EntryInterface $entry */
-            $entry = $grid->getEntry();
+            /**
+             * If the entry no longer exists
+             * we need to skip this row.
+             *
+             * @var EntryInterface $entry
+             */
+            if (!$entry = $grid->getEntry()) {
+                continue;
+            }
 
             /* @var GridFieldType $type */
             $type = $field->getType();

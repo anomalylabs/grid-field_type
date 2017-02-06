@@ -59,7 +59,7 @@ class GridFieldType extends FieldType
     protected $config = [
         'manage' => true,
     ];
-    
+
     /**
      * The field rules.
      *
