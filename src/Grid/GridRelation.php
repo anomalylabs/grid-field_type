@@ -1,7 +1,6 @@
 <?php namespace Anomaly\GridFieldType\Grid;
 
 use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
-use Anomaly\Streams\Platform\Entry\EntryModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -28,7 +27,7 @@ class GridRelation extends HasMany
          *
          * @var EntryInterface $entry
          */
-        if (isset($attributes['entry']) && $attributes['entry'] instanceof EntryModel) {
+        if (isset($attributes['entry']) && $attributes['entry'] instanceof EntryInterface) {
 
             $entry = array_pull($attributes, 'entry');
 
