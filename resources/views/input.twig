@@ -1,9 +1,10 @@
 {{ asset_add('styles.css', 'anomaly.field_type.grid::scss/grid.scss') }}
-
 {{ asset_add("scripts.js", "streams::js/table/jquery-sortable.js") }}
 {{ asset_add('scripts.js', 'anomaly.field_type.grid::js/input.js') }}
 
-<div {{ html_attributes(field_type.attributes) }}>
+{% set instance = str_random() %}
+
+<div {{ html_attributes(field_type.attributes) }} data-instance="{{ instance }}">
 
     <div class="grid-list">
         {% for form in field_type.forms %}
@@ -14,7 +15,10 @@
     <div class="grid-controls">
 
         <a href="{{ url('admin/grid-field_type/choose/' ~ field_type.id() ~ '?prefix=' ~ field_type.prefix) }}"
-           data-toggle="modal" data-target="#{{ field_type.field_name }}-modal" class="btn btn-sm btn-success">
+           data-toggle="modal"
+           data-instance="{{ instance }}"
+           class="btn btn-sm btn-success"
+           data-target="#{{ field_type.field_name }}-modal">
             {{ trans(field_type.config.add_row ?: 'anomaly.field_type.grid::button.add_row') }}
         </a>
 

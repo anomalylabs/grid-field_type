@@ -10,6 +10,8 @@ $(document).on('ajaxComplete ready', function () {
         var field = wrapper.data('field_name');
         var modal = $('#' + field + '-modal');
         var items = $(this).find('.grid-item');
+        var instance = $(this).data('instance');
+        var add = wrapper.find('.add-row[data-instance="' + instance + '"]');
         var cookie = 'grid:' + $(this).closest('.grid-container').data('field_name');
 
         var collapsed = Cookies.getJSON(cookie);
@@ -156,7 +158,8 @@ $(document).on('ajaxComplete ready', function () {
             modal.trigger('loading');
 
             $(wrapper)
-                .find('.grid-list')
+                .find('> .grid-list')
+                .first()
                 .append($('<div class="grid-item"><div class="grid-loading">' + modal.data('loading') + '...</div></div>').load($(this).attr('href') + '&instance=' + count, function () {
                     wrapper.sort();
                     wrapper.indexCollapsed();
