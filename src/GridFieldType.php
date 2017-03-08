@@ -6,6 +6,7 @@ use Anomaly\GridFieldType\Grid\GridModel;
 use Anomaly\GridFieldType\Grid\GridRelation;
 use Anomaly\GridFieldType\Validation\ValidateGrid;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
+use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Anomaly\Streams\Platform\Field\Contract\FieldInterface;
 use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
@@ -215,9 +216,12 @@ class GridFieldType extends FieldType
      */
     public function form(FieldInterface $field, StreamInterface $stream, $instance = null)
     {
+        /* @var EntryInterface $model */
+        $model = $stream->getEntryModel();
+
         /* @var FormBuilder $builder */
-        $builder = app(FormBuilder::class)
-            ->setModel($stream->getEntryModel())
+        $builder = $model->newGridFieldTypeFormBuilder()
+            ->setModel($model)
             ->setOption('grid_instance', $instance)
             ->setOption('grid_field', $field->getId())
             ->setOption('grid_title', $stream->getName())
