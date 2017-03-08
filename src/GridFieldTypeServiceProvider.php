@@ -42,7 +42,7 @@ class GridFieldTypeServiceProvider extends AddonServiceProvider
         EntryModel $model
     ) {
         $addon = $integrator->register(
-            __DIR__ . '/../addons/anomaly/grids-module/',
+            realpath(__DIR__ . '/../addons/anomaly/grids-module/'),
             'anomaly.module.grids',
             true,
             true
