@@ -135,6 +135,16 @@ class GridFieldType extends FieldType
     }
 
     /**
+     * Get the related table.
+     *
+     * @return string
+     */
+    public function getRelatedTableName()
+    {
+        return $this->getRelatedModel()->getTable();
+    }
+
+    /**
      * Get the related model.
      *
      * @return null|Model
