@@ -25,12 +25,13 @@ class GridsModule extends Module
      * @var array
      */
     protected $sections = [
-        'grids' => [
+        'grids'  => [
             'buttons'  => [
                 'new_grid',
             ],
             'sections' => [
                 'assignments' => [
+                    'hidden'  => true,
                     'href'    => 'admin/grids/assignments/{request.route.parameters.stream}',
                     'buttons' => [
                         'assign_fields' => [
@@ -43,7 +44,7 @@ class GridsModule extends Module
                 ],
             ],
         ],
-        'fields'    => [
+        'fields' => [
             'buttons' => [
                 'new_field' => [
                     'data-toggle' => 'modal',
