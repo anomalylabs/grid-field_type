@@ -12,6 +12,7 @@
         {% endfor %}
     </div>
 
+    {% if not (field_type.readonly) %}
     <div class="grid-controls">
 
         <a href="{{ url('admin/grid-field_type/choose/' ~ field_type.id() ~ '?prefix=' ~ field_type.prefix) }}"
@@ -37,5 +38,5 @@
             <div class="modal-content"></div>
         </div>
     </div>
-
+    {% endif %}
 </div>

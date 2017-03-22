@@ -74,6 +74,8 @@ class GetMultiformFromData
                 $form->setEntry($item['entry']);
             }
 
+            $form->setReadOnly($this->fieldType->isReadOnly());
+
             $forms->addForm($this->fieldType->getFieldName() . '_' . $item['instance'], $form);
         }
 
