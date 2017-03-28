@@ -30,6 +30,12 @@
                     color: #ffffff;
                 }
 
+                .dropdown-menu {
+                    a {
+                        color: $dropdown-link-color;
+                    }
+                }
+
                 ul {
                     margin: 0;
                     padding: 0;
@@ -47,6 +53,7 @@
             }
 
             .grid-body {
+                width: 100%;
                 padding: 1rem;
 
                 .form-group {

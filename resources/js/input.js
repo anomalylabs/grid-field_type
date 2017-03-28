@@ -1,13 +1,17 @@
-$(function () {
+$(document).on('ajaxComplete ready', function () {
 
-    var grids = $('[data-provides="anomaly.field_type.grid"]');
+    var grids = $('[data-provides="anomaly.field_type.grid"]:not([data-initialized])');
 
     grids.each(function () {
+
+        $(this).attr('data-initialized', '');
 
         var wrapper = $(this);
         var field = wrapper.data('field_name');
         var modal = $('#' + field + '-modal');
         var items = $(this).find('.grid-item');
+        var instance = $(this).data('instance');
+        var add = wrapper.find('.add-row[data-instance="' + instance + '"]');
         var cookie = 'grid:' + $(this).closest('.grid-container').data('field_name');
 
         var collapsed = Cookies.getJSON(cookie);
@@ -16,6 +20,7 @@ $(function () {
 
             var item = $(this);
             var toggle = $(this).find('[data-toggle="collapse"]');
+            var text = toggle.find('span');
 
             /**
              * Hide initial items.
@@ -28,8 +33,14 @@ $(function () {
                 item
                     .toggleClass('collapsed')
                     .find('[data-toggle="collapse"] i')
-                    .toggleClass('fa-toggle-on')
-                    .toggleClass('fa-toggle-off');
+                    .toggleClass('fa-compress')
+                    .toggleClass('fa-expand');
+
+                if (toggle.find('i').hasClass('fa-compress')) {
+                    text.text(toggle.data('collapse'));
+                } else {
+                    text.text(toggle.data('expand'));
+                }
             }
         });
 
@@ -37,12 +48,24 @@ $(function () {
 
             var toggle = $(this);
             var item = toggle.closest('.grid-item');
+            var text = toggle.find('span');
 
             item
                 .toggleClass('collapsed')
                 .find('[data-toggle="collapse"] i')
-                .toggleClass('fa-toggle-on')
-                .toggleClass('fa-toggle-off');
+                .toggleClass('fa-compress')
+                .toggleClass('fa-expand');
+
+            if (toggle.find('i').hasClass('fa-compress')) {
+                text.text(toggle.data('collapse'));
+            } else {
+                text.text(toggle.data('expand'));
+            }
+
+            toggle
+                .closest('.dropdown')
+                .find('.dropdown-toggle')
+                .trigger('click');
 
             if (typeof collapsed == 'undefined') {
                 collapsed = {};
@@ -135,8 +158,9 @@ $(function () {
             modal.trigger('loading');
 
             $(wrapper)
-                .find('.grid-list')
-                .append($('<div class="grid-item"><div class="grid-loading">' + $(this).data('loading') + '...</div></div>').load($(this).attr('href') + '&instance=' + count, function () {
+                .find('> .grid-list')
+                .first()
+                .append($('<div class="grid-item"><div class="grid-loading">' + modal.data('loading') + '...</div></div>').load($(this).attr('href') + '&instance=' + count, function () {
                     wrapper.sort();
                     wrapper.indexCollapsed();
                     modal.modal('hide');

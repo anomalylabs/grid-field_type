@@ -63,4 +63,28 @@ class GridModel extends Model implements PresentableInterface
     {
         return new GridPresenter($this);
     }
+
+    /**
+     * Define a polymorphic, inverse one-to-one or many relationship.
+     *
+     * @param  string $name
+     * @param  string $type
+     * @param  string $id
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function morphTo($name = null, $type = null, $id = null)
+    {
+        /**
+         * Check that the grid relation still
+         * exists. If it does NOT then we send
+         * a bogus relation back instead.
+         */
+        if (!class_exists($this->entry_type)) {
+            return new MorphTo(
+                $this->newQuery(), $this, -1, null, $type, $name
+            );
+        }
+
+        return parent::morphTo($name, $type, $id);
+    }
 }

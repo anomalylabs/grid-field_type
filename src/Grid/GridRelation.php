@@ -1,5 +1,6 @@
 <?php namespace Anomaly\GridFieldType\Grid;
 
+use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -20,6 +21,20 @@ class GridRelation extends HasMany
      */
     public function create(array $attributes)
     {
+        /**
+         * Mutate the 'entry' attribute since
+         * that is what we're used to.
+         *
+         * @var EntryInterface $entry
+         */
+        if (isset($attributes['entry']) && $attributes['entry'] instanceof EntryInterface) {
+
+            $entry = array_pull($attributes, 'entry');
+
+            $attributes['entry_id']   = $entry->getId();
+            $attributes['entry_type'] = get_class($entry);
+        }
+
         // Here we will set the raw attributes to avoid hitting the "fill" method so
         // that we do not have to worry about a mass accessor rules blocking sets
         // on the models. Otherwise, some of these attributes will not get set.
