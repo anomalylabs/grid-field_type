@@ -32,12 +32,13 @@ class GridFieldTypeSchema extends FieldTypeSchema
             $table,
             function (Blueprint $table) {
 
+                $table->increments('id');
                 $table->integer('entry_id');
                 $table->string('entry_type');
                 $table->integer('related_id');
                 $table->integer('sort_order')->nullable();
 
-                $table->primary(['related_id', 'entry_id', 'entry_type'], 'unique-relations');
+                $table->unique(['related_id', 'entry_id', 'entry_type'], 'unique-relations');
             }
         );
     }
