@@ -1,4 +1,6 @@
 {{ asset_add('styles.css', 'anomaly.field_type.grid::scss/grid.scss') }}
+
+{{ asset_add("scripts.js", "anomaly.field_type.repeater::js/cookie.min.js") }}
 {{ asset_add("scripts.js", "streams::js/table/jquery-sortable.js") }}
 {{ asset_add('scripts.js', 'anomaly.field_type.grid::js/input.js') }}
 
@@ -15,7 +17,7 @@
     {% if not (field_type.readonly) %}
     <div class="grid-controls">
 
-        <a href="{{ url('admin/grid-field_type/choose/' ~ field_type.id() ~ '?prefix=' ~ field_type.prefix) }}"
+        <a href="{{ url('grid-field_type/choose/' ~ field_type.id() ~ '?prefix=' ~ field_type.prefix) }}"
            data-toggle="modal"
            data-instance="{{ instance }}"
            class="btn btn-sm btn-success"
