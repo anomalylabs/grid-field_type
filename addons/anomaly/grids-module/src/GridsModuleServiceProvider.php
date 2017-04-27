@@ -1,6 +1,10 @@
 <?php namespace Anomaly\GridsModule;
 
+use Anomaly\GridsModule\Http\Controller\Admin\AssignmentsController;
+use Anomaly\GridsModule\Http\Controller\Admin\FieldsController;
 use Anomaly\Streams\Platform\Addon\AddonServiceProvider;
+use Anomaly\Streams\Platform\Assignment\AssignmentRouter;
+use Anomaly\Streams\Platform\Field\FieldRouter;
 
 /**
  * Class GridsModuleServiceProvider
@@ -18,16 +22,20 @@ class GridsModuleServiceProvider extends AddonServiceProvider
      * @var array
      */
     protected $routes = [
-        'admin/grids'                                => 'Anomaly\GridsModule\Http\Controller\Admin\StreamsController@index',
-        'admin/grids/create'                         => 'Anomaly\GridsModule\Http\Controller\Admin\StreamsController@create',
-        'admin/grids/edit/{id}'                      => 'Anomaly\GridsModule\Http\Controller\Admin\StreamsController@edit',
-        'admin/grids/fields'                         => 'Anomaly\GridsModule\Http\Controller\Admin\FieldsController@index',
-        'admin/grids/fields/choose'                  => 'Anomaly\GridsModule\Http\Controller\Admin\FieldsController@choose',
-        'admin/grids/fields/create'                  => 'Anomaly\GridsModule\Http\Controller\Admin\FieldsController@create',
-        'admin/grids/fields/edit/{id}'               => 'Anomaly\GridsModule\Http\Controller\Admin\FieldsController@edit',
-        'admin/grids/assignments/{stream}'           => 'Anomaly\GridsModule\Http\Controller\Admin\AssignmentsController@index',
-        'admin/grids/assignments/{stream}/choose'    => 'Anomaly\GridsModule\Http\Controller\Admin\AssignmentsController@choose',
-        'admin/grids/assignments/{stream}/create'    => 'Anomaly\GridsModule\Http\Controller\Admin\AssignmentsController@create',
-        'admin/grids/assignments/{stream}/edit/{id}' => 'Anomaly\GridsModule\Http\Controller\Admin\AssignmentsController@edit',
+        'admin/grids'           => 'Anomaly\GridsModule\Http\Controller\Admin\StreamsController@index',
+        'admin/grids/create'    => 'Anomaly\GridsModule\Http\Controller\Admin\StreamsController@create',
+        'admin/grids/edit/{id}' => 'Anomaly\GridsModule\Http\Controller\Admin\StreamsController@edit',
     ];
+
+    /**
+     * Map the addon.
+     *
+     * @param FieldRouter      $fields
+     * @param AssignmentRouter $assignments
+     */
+    public function map(FieldRouter $fields, AssignmentRouter $assignments)
+    {
+        $fields->route($this->addon, FieldsController::class);
+        $assignments->route($this->addon, AssignmentsController::class);
+    }
 }
