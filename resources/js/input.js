@@ -157,14 +157,37 @@ $(document).on('ajaxComplete ready', function () {
 
             modal.trigger('loading');
 
-            $(wrapper)
-                .find('> .grid-list')
-                .first()
-                .append($('<div class="grid-item"><div class="grid-loading">' + modal.data('loading') + '...</div></div>').load($(this).attr('href') + '&instance=' + count, function () {
-                    wrapper.sort();
-                    wrapper.indexCollapsed();
-                    modal.modal('hide');
-                }));
+            var $gridItem = $('<div class="grid-item"><div class="grid-loading">' + modal.data('loading') + '...</div></div>');
+
+            $(wrapper).find('> .grid-list').first().append($gridItem);
+
+            $.get($(this).attr('href') + '&instance=' + count, function (data) {
+
+                /**
+                 * This is a hack to get around a bug that exists in the editor field type.
+                 * If ace has already been loaded then search for a line containing ace.js and remove it.
+                 */
+                if(typeof(ace) === 'object') {
+                    var dataArray = data.split('\n');
+                    var removeIndex = -1;
+                    for(var i = 0; i < dataArray.length; i++) {
+                        if(dataArray[i].includes('ace.js')) {
+                            removeIndex = i;
+                        }
+                    }
+                    if(removeIndex > -1) {
+                        dataArray.splice(removeIndex, 1);
+                    }
+
+                    data = dataArray.join('\n');
+                }
+
+                $gridItem.html(data);
+
+                wrapper.sort();
+                wrapper.indexCollapsed();
+                modal.modal('hide');
+            });
         });
     });
 });
