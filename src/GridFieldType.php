@@ -208,6 +208,23 @@ class GridFieldType extends FieldType
     }
 
     /**
+     * Get the value to index.
+     *
+     * @return string
+     */
+    public function getSearchableValue()
+    {
+        return json_encode(
+            array_map(
+                function ($entry) {
+                    return $entry->entry->toSearchableArray();
+                },
+                $this->entry->{$this->getField()}->all()
+            )
+        );
+    }
+
+    /**
      * Return a form builder instance.
      *
      * @param FieldInterface  $field
