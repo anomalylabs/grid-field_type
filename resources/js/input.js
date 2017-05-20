@@ -44,34 +44,63 @@ $(document).on('ajaxComplete ready', function () {
             }
         });
 
+        wrapper.on('dblclick', '.grid-item-controls', function () {
+            $(this).find('[data-toggle="collapse"]:first').trigger('click');
+        });
+
         wrapper.on('click', '[data-toggle="collapse"]', function () {
-
-            var toggle = $(this);
-            var item = toggle.closest('.grid-item');
-            var text = toggle.find('span');
-
-            item
-                .toggleClass('collapsed')
-                .find('[data-toggle="collapse"] i')
-                .toggleClass('fa-compress')
-                .toggleClass('fa-expand');
-
-            if (toggle.find('i').hasClass('fa-compress')) {
-                text.text(toggle.data('collapse'));
-            } else {
-                text.text(toggle.data('expand'));
-            }
-
-            toggle
-                .closest('.dropdown')
-                .find('.dropdown-toggle')
-                .trigger('click');
 
             if (typeof collapsed == 'undefined') {
                 collapsed = {};
             }
 
-            collapsed[items.index(item)] = item.hasClass('collapsed');
+            // Stash the action.
+            var action = $(this).find('i').hasClass('fa-expand') ? 'expanding' : 'collapsing';
+
+            // Check this row.
+            $(this).closest('.grid-item').find('input[type="checkbox"]:first').prop('checked', true);
+
+            // Hide the dropdown menu.
+            $(this).closest('.grid-item').find('.dropdown:first .open').removeClass('open');
+
+            items.each(function () {
+
+                var item = $(this);
+                var toggle = item.find('[data-toggle="collapse"]');
+                var checkbox = item.find('input[type="checkbox"]:first');
+                var text = toggle.find('span');
+
+                if (action == 'collapsing' && item.hasClass('collapsed')) {
+                    checkbox.prop('checked', false);
+                }
+
+                if (action == 'expanding' && !item.hasClass('collapsed')) {
+                    checkbox.prop('checked', false);
+                }
+
+                if (checkbox.prop('checked')) {
+                    item
+                        .toggleClass('collapsed')
+                        .find('[data-toggle="collapse"] i')
+                        .toggleClass('fa-compress')
+                        .toggleClass('fa-expand');
+
+                    if (toggle.find('i').hasClass('fa-compress')) {
+                        text.text(toggle.data('collapse'));
+                    } else {
+                        text.text(toggle.data('expand'));
+                    }
+
+                    toggle
+                        .closest('.dropdown')
+                        .find('.dropdown-toggle')
+                        .trigger('click');
+
+                    checkbox.prop('checked', false);
+
+                    collapsed[items.index(item)] = item.hasClass('collapsed');
+                }
+            });
 
             Cookies.set(cookie, JSON.stringify(collapsed), {path: window.location.pathname});
 
@@ -167,15 +196,15 @@ $(document).on('ajaxComplete ready', function () {
                  * This is a hack to get around a bug that exists in the editor field type.
                  * If ace has already been loaded then search for a line containing ace.js and remove it.
                  */
-                if(typeof(ace) === 'object') {
+                if (typeof(ace) === 'object') {
                     var dataArray = data.split('\n');
                     var removeIndex = -1;
-                    for(var i = 0; i < dataArray.length; i++) {
-                        if(dataArray[i].includes('ace.js')) {
+                    for (var i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i].includes('ace.js')) {
                             removeIndex = i;
                         }
                     }
-                    if(removeIndex > -1) {
+                    if (removeIndex > -1) {
                         dataArray.splice(removeIndex, 1);
                     }
 
