@@ -128,6 +128,21 @@ $(document).on('ajaxComplete ready', function () {
             return false;
         });
 
+        wrapper.on('click', '[data-select="all"]', function () {
+
+            wrapper.find('.grid-item').each(function () {
+
+                var item = $(this);
+                var checkbox = item.find('input[type="checkbox"]:first');
+
+                if (!checkbox.prop('checked')) {
+                    checkbox.prop('checked', true);
+                }
+            });
+
+            return false;
+        });
+
         wrapper.indexCollapsed = function () {
 
             wrapper.find('.grid-list').find('.grid-item').each(function (index) {
