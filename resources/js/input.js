@@ -63,7 +63,7 @@ $(document).on('ajaxComplete ready', function () {
             // Hide the dropdown menu.
             $(this).closest('.grid-item').find('.dropdown:first .open').removeClass('open');
 
-            items.each(function () {
+            wrapper.find('.grid-item').each(function () {
 
                 var item = $(this);
                 var toggle = item.find('[data-toggle="collapse"]');
@@ -103,6 +103,27 @@ $(document).on('ajaxComplete ready', function () {
             });
 
             Cookies.set(cookie, JSON.stringify(collapsed), {path: window.location.pathname});
+
+            return false;
+        });
+
+        wrapper.on('click', '[data-delete="row"]', function () {
+
+            // Check this row.
+            $(this).closest('.grid-item').find('input[type="checkbox"]:first').prop('checked', true);
+
+            // Hide the dropdown menu.
+            $(this).closest('.grid-item').find('.dropdown:first .open').removeClass('open');
+
+            wrapper.find('.grid-item').each(function () {
+
+                var item = $(this);
+                var checkbox = item.find('input[type="checkbox"]:first');
+
+                if (checkbox.prop('checked')) {
+                    item.remove();
+                }
+            });
 
             return false;
         });
