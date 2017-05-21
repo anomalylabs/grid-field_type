@@ -21,6 +21,9 @@
                     {{ icon('fa fa-compress') }} <span>{{ trans('anomaly.field_type.grid::input.collapse') }}</span>
                 </a>
                 {% if not (field_type.readonly) %}
+                    <a href="#" class="dropdown-item" data-add="above">
+                        <i class="fa fa-plus"></i> <span>{{ trans('anomaly.field_type.grid::input.add_above') }}</span>
+                    </a>
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item text-danger" data-delete="row">
                         <i class="fa fa-trash"></i> <span>{{ trans('anomaly.field_type.grid::input.delete') }}</span>

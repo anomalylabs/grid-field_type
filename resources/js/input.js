@@ -143,6 +143,17 @@ $(document).on('ajaxComplete ready', function () {
             return false;
         });
 
+        wrapper.on('click', '[data-add="above"]', function () {
+
+            wrapper.find('.grid-item.target').removeClass('target');
+
+            $(this).closest('.grid-item').addClass('target');
+
+            wrapper.find('> .grid-controls > a[data-toggle="modal"]').trigger('click');
+
+            return false;
+        });
+
         wrapper.indexCollapsed = function () {
 
             wrapper.find('.grid-list').find('.grid-item').each(function (index) {
@@ -224,7 +235,13 @@ $(document).on('ajaxComplete ready', function () {
 
             var $gridItem = $('<div class="grid-item"><div class="grid-loading">' + modal.data('loading') + '...</div></div>');
 
-            $(wrapper).find('> .grid-list').first().append($gridItem);
+            var target = $(wrapper).find('> .grid-list > .grid-item.target');
+
+            if (target.length) {
+                target.removeClass('target').before($gridItem);
+            } else {
+                $(wrapper).find('> .grid-list').first().append($gridItem);
+            }
 
             $.get($(this).attr('href') + '&instance=' + count, function (data) {
 
