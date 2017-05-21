@@ -215,11 +215,18 @@ class GridFieldType extends FieldType
     public function getSearchableValue()
     {
         return json_encode(
-            array_map(
-                function ($entry) {
-                    return $entry->entry->toSearchableArray();
-                },
-                $this->entry->{$this->getField()}->all()
+            array_filter(
+                array_map(
+                    function (GridModel $row) {
+
+                        if (!$entry = $row->getEntry()) {
+                            return null;
+                        }
+
+                        return $entry->toSearchableArray();
+                    },
+                    $this->entry->{$this->getField()}->all()
+                )
             )
         );
     }
