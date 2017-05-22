@@ -266,6 +266,10 @@ $(document).on('ajaxComplete ready', function () {
 
                 $gridItem.html(data);
 
+                $('html, body').animate({
+                    scrollTop: $gridItem.offset().top - 140
+                }, 200);
+
                 wrapper.sort();
                 wrapper.indexCollapsed();
                 modal.modal('hide');
