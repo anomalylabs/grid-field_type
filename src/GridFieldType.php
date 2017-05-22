@@ -299,6 +299,23 @@ class GridFieldType extends FieldType
             return;
         }
 
+        /**
+         * Skip self handling field types since they
+         * will handle themselves later. Otherwise
+         * this causes some mad recursion issues.
+         *
+         * @var FormBuilder $form
+         */
+        foreach ($forms->getForms() as $form) {
+
+            $skips = $form
+                ->getFormFields()
+                ->selfHandling()
+                ->fieldSlugs();
+
+            $form->setSkips($skips);
+        }
+
         /*
          * Handle the post action
          * for all the child forms.
