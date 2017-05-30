@@ -15,9 +15,9 @@
                 <li class="nav-item">
                     <a href="{{ url_to('/grid-field_type/form/' ~ route_parameter('field')) }}/{{ grid.stream.id }}?prefix={{ request_get('prefix') }}"
                        class="add-row nav-link has-click-event">
-                        <strong>{{ grid.stream.name }}</strong>
+                        <strong>{{ trans(grid.stream.name) }}</strong>
                         <br>
-                        <small>{{ grid.stream.description }}</small>
+                        <small>{{ trans(grid.stream.description) }}</small>
                     </a>
                 </li>
             {% endfor %}
