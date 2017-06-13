@@ -35,6 +35,18 @@ class GridModel extends Model implements PresentableInterface
     ];
 
     /**
+     * Return the type of grid.
+     *
+     * @return string
+     */
+    public function type()
+    {
+        return $this
+            ->getEntry()
+            ->getStreamSlug();
+    }
+
+    /**
      * Return the related entry.
      *
      * @return EntryInterface
@@ -62,6 +74,17 @@ class GridModel extends Model implements PresentableInterface
     public function getPresenter()
     {
         return new GridPresenter($this);
+    }
+
+    /**
+     * Return a new collection instance.
+     *
+     * @param array $models
+     * @return GridCollection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new GridCollection($models);
     }
 
     /**

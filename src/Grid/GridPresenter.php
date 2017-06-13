@@ -22,18 +22,6 @@ class GridPresenter extends Presenter
     protected $object;
 
     /**
-     * Return the type of grid.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return $this->object
-            ->getEntry()
-            ->getStreamSlug();
-    }
-
-    /**
      * Return the decorated entry.
      *
      * @return EntryPresenter
