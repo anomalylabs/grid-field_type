@@ -41,7 +41,7 @@ class GridRelation extends HasMany
      * @param  array $attributes
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function create(array $attributes)
+    public function create(array $attributes = [])
     {
         /**
          * Mutate the 'entry' attribute since
