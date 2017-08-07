@@ -64,7 +64,7 @@ class GridRelation extends HasMany
 
         $instance->setTable($this->related->getTable());
 
-        $instance->setAttribute($this->getPlainForeignKey(), $this->getParentKey());
+        $instance->setAttribute($this->getForeignKeyName(), $this->getParentKey());
 
         $instance->save();
 
