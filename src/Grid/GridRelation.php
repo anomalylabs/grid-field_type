@@ -32,7 +32,7 @@ class GridRelation extends HasMany
 
         return $collection
             ->setEntry($this->parent)
-            ->setKey($this->getForeignKey());
+            ->setKey($this->getForeignKeyName());
     }
 
     /**
