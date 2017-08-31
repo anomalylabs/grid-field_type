@@ -1,24 +1,12 @@
 <?php
 
-use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
+use Anomaly\GridFieldType\Support\Config\StreamsOptions;
 
 return [
     'related' => [
         'type'   => 'anomaly.field_type.checkboxes',
         'config' => [
-            'options' => function (\Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface $streams) {
-
-                $options = [];
-
-                /* @var StreamInterface as $stream */
-                foreach ($streams->findAllByNamespace('grid') as $stream) {
-                    $options[$stream->getEntryModelName()] = $stream->getName();
-                }
-
-                ksort($options);
-
-                return $options;
-            },
+            'handler' => StreamsOptions::class,
         ],
     ],
     'add_row' => [
