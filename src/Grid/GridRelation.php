@@ -14,6 +14,28 @@ class GridRelation extends HasMany
 {
 
     /**
+     * The related parent.
+     *
+     * @var EntryInterface
+     */
+    protected $parent;
+
+    /**
+     * Get the results of the relationship.
+     *
+     * @return mixed
+     */
+    public function getResults()
+    {
+        /* @var GridCollection $collection */
+        $collection = $this->query->get();
+
+        return $collection
+            ->setEntry($this->parent)
+            ->setKey($this->getForeignKey());
+    }
+
+    /**
      * Create a new instance of the related model.
      *
      * @param  array $attributes
