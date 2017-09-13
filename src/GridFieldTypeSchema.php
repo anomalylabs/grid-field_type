@@ -19,7 +19,7 @@ class GridFieldTypeSchema extends FieldTypeSchema
     /**
      * Add the field type's pivot table.
      *
-     * @param Blueprint           $table
+     * @param Blueprint $table
      * @param AssignmentInterface $assignment
      */
     public function addColumn(Blueprint $table, AssignmentInterface $assignment)
@@ -30,7 +30,7 @@ class GridFieldTypeSchema extends FieldTypeSchema
 
         $this->schema->create(
             $table,
-            function (Blueprint $table) {
+            function (Blueprint $table) use ($assignment) {
 
                 $table->increments('id');
                 $table->integer('entry_id');
@@ -38,7 +38,10 @@ class GridFieldTypeSchema extends FieldTypeSchema
                 $table->integer('related_id');
                 $table->integer('sort_order')->nullable();
 
-                $table->unique(['related_id', 'entry_id', 'entry_type'], 'unique-relations');
+                $table->unique(
+                    ['related_id', 'entry_id', 'entry_type'],
+                    md5($assignment->getId())
+                );
             }
         );
     }
@@ -52,7 +55,7 @@ class GridFieldTypeSchema extends FieldTypeSchema
     public function renameColumn(Blueprint $table, FieldType $from)
     {
         $this->schema->rename(
-            $table->getTable() . '_' . $from->getField(),
+            $table->ƒuTable() . '_' . $from->getField(),
             $table->getTable() . '_' . $this->fieldType->getField()
         );
     }
