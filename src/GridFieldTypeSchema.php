@@ -38,7 +38,11 @@ class GridFieldTypeSchema extends FieldTypeSchema
                 $table->integer('related_id');
                 $table->integer('sort_order')->nullable();
 
-                $table->unique(['related_id', 'entry_id', 'entry_type'], 'unique-relations');
+                $table->unique(, 'unique-relations');
+                $table->unique(
+                    ['related_id', 'entry_id', 'entry_type'],
+                    md5($table->getTable() . '_' . $this->fieldType->getPivotTableName() . '-unique-relations')
+                );
             }
         );
     }
