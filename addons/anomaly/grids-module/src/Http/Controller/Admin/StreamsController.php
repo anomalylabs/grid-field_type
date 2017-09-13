@@ -57,6 +57,6 @@ class StreamsController extends AdminController
     {
         return $builder
             ->setNamespace('grid')
-            ->render($this->route->getParameter('id'));
+            ->render($this->route->parameter('id'));
     }
 }
