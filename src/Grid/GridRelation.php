@@ -49,12 +49,12 @@ class GridRelation extends HasMany
          *
          * @var EntryInterface $entry
          */
-        if (isset($attributes['entry']) && $attributes['entry'] instanceof EntryInterface) {
+        if (array_get($attributes, 'entry') instanceof EntryInterface) {
 
             $entry = array_pull($attributes, 'entry');
 
-            $attributes['entry_id']   = $entry->getId();
-            $attributes['entry_type'] = get_class($entry);
+            array_set($attributes, 'entry_id', $entry->getId());
+            array_set($attributes, 'entry_type', get_class($entry));
         }
 
         // Here we will set the raw attributes to avoid hitting the "fill" method so
@@ -70,4 +70,5 @@ class GridRelation extends HasMany
 
         return $instance;
     }
+
 }
