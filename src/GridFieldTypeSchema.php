@@ -55,7 +55,7 @@ class GridFieldTypeSchema extends FieldTypeSchema
     public function renameColumn(Blueprint $table, FieldType $from)
     {
         $this->schema->rename(
-            $table->ƒuTable() . '_' . $from->getField(),
+            $table->getTable() . '_' . $from->getField(),
             $table->getTable() . '_' . $this->fieldType->getField()
         );
     }
