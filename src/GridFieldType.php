@@ -251,9 +251,11 @@ class GridFieldType extends FieldType
             ->setOption('grid_field', $field->getId())
             ->setOption('grid_title', $stream->getName())
             ->setOption('grid_prefix', $this->getFieldName())
-            ->setOption('form_view', 'anomaly.field_type.grid::form')
-            ->setOption('wrapper_view', 'anomaly.field_type.grid::wrapper')
             ->setOption('prefix', $this->getFieldName() . '_' . $instance . '_');
+        
+        $builder
+            ->setOption('form_view', $builder->getOption('form_view', 'anomaly.field_type.grid::form'))
+            ->setOption('wrapper_view', $builder->getOption('wrapper_view', 'anomaly.field_type.grid::wrapper'));
 
         return $builder;
     }
