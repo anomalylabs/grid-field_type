@@ -30,6 +30,30 @@ class GridCollection extends EloquentCollection
     protected $key = null;
 
     /**
+     * Return if the grid has a
+     * type or default to key.
+     *
+     * @param mixed $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        $item = $this->first(
+            function ($grid) use ($key) {
+
+                /* @var GridModel $grid */
+                return str_is($key, $grid->type());
+            }
+        );
+
+        if ($item) {
+            return true;
+        }
+
+        return parent::has($key);
+    }
+
+    /**
      * Render the grid views.
      *
      * @return string
