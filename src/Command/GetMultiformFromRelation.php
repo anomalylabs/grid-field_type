@@ -72,7 +72,9 @@ class GetMultiformFromRelation
 
             $type->setPrefix($this->fieldType->getPrefix());
 
-            $form = $type->form($field, $entry->getStream(), $instance)->setEntry($entry->getId());
+            $form = $type
+                ->form($field, $entry->getStream(), $instance)
+                ->setEntry($entry);
 
             $form->setReadOnly($this->fieldType->isReadOnly());
 
