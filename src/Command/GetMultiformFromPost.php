@@ -84,6 +84,8 @@ class GetMultiformFromPost
             $forms->addForm($this->fieldType->getFieldName() . '_' . $item['instance'], $form);
         }
 
+        $forms->setOption('success_message', false);
+
         return $forms;
     }
 }
