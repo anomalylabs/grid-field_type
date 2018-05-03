@@ -247,6 +247,7 @@ class GridFieldType extends FieldType
         /* @var FormBuilder $builder */
         $builder = $model->newGridFieldTypeFormBuilder()
             ->setModel($model)
+            ->setOption('success_message', false)
             ->setOption('grid_instance', $instance)
             ->setOption('grid_field', $field->getId())
             ->setOption('grid_title', $stream->getName())
