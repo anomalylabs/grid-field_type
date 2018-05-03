@@ -1,9 +1,11 @@
 <?php namespace Anomaly\GridFieldType\Grid;
 
 use Anomaly\Streams\Platform\Addon\Plugin\PluginCriteria;
-use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
+use Anomaly\Streams\Platform\Entry\EntryModel;
 use Anomaly\Streams\Platform\Model\EloquentCollection;
+use Anomaly\Streams\Platform\Model\EloquentModel;
 use Anomaly\Streams\Platform\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class GridCollection
@@ -16,18 +18,18 @@ class GridCollection extends EloquentCollection
 {
 
     /**
-     * The parent entry object.
+     * The model accessing the collection.
      *
-     * @var null|EntryInterface
+     * @var null|EloquentModel|EntryModel|Model
      */
-    protected $entry = null;
+    protected $model = null;
 
     /**
-     * The identifying key.
+     * The grid field slug.
      *
-     * @var null
+     * @var null|string
      */
-    protected $key = null;
+    protected $field = null;
 
     /**
      * Return if the grid has a
@@ -60,81 +62,77 @@ class GridCollection extends EloquentCollection
      */
     public function views()
     {
-        return new PluginCriteria(
+        return (new PluginCriteria(
             'render',
             function (Collection $options) {
 
                 $name = $options->get('name', 'grid');
                 $path = trim($options->get('path', 'theme::grids'), '/') . '/';
 
-                return $this->entry->cache(
-                    $this->getKey(),
-                    $options->get('cache', null),
-                    function () use ($path, $name, $options) {
-                        return implode(
-                            $this->map(
-                                function ($grid) use ($path, $name, $options) {
+                return implode(
+                    $this->map(
+                        function ($grid) use ($path, $name, $options) {
 
-                                    /* @var GridModel $grid */
-                                    return view(
-                                        $path . $grid->type(),
-                                        [
-                                            $name     => $grid,
-                                            'options' => $options,
-                                        ]
-                                    )->render();
-                                }
-                            )->all(),
-                            "\n"
-                        );
-                    }
+                            /* @var GridModel $grid */
+                            return view(
+                                $path . $grid->type(),
+                                [
+                                    $name     => $grid,
+                                    'options' => $options,
+                                ]
+                            )->render();
+                        }
+                    )->all(),
+                    "\n"
                 );
             }
-        );
+        ))
+            ->setModel($this->getModel())
+            ->setCachePrefix('anomaly.field_type.grid::grids.views.' . $this->getField());
     }
 
     /**
-     * Get the parent entry.
+     * Get the model.
      *
-     * @return EntryInterface|null
+     * @return EntryModel|EloquentModel|Model|null
      */
-    public function getEntry()
+    public function getModel()
     {
-        return $this->entry;
+        return $this->model;
     }
 
     /**
-     * Set the parent entry.
+     * Set the model.
      *
-     * @param EntryInterface $entry
+     * @param $model
      * @return $this
      */
-    public function setEntry(EntryInterface $entry)
+    public function setModel($model)
     {
-        $this->entry = $entry;
+        $this->model = $model;
 
         return $this;
     }
 
     /**
-     * Get the identifying key.
+     * Get the field.
      *
-     * @return null
+     * @return null|string
      */
-    public function getKey()
+    public function getField()
     {
-        return $this->key;
+        return $this->field;
     }
 
     /**
-     * Set the identifying key.
+     * Set the field.
      *
-     * @param $key
+     * @param $field
      * @return $this
      */
-    public function setKey($key)
+    public function setField($field)
     {
-        $this->key = $key;
+        $this->field = $field;
 
         return $this;
     }

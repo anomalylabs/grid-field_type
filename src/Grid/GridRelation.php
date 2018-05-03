@@ -27,12 +27,25 @@ class GridRelation extends HasMany
      */
     public function getResults()
     {
-        /* @var GridCollection $collection */
-        $collection = $this->query->get();
+        return $this->get();
+    }
 
-        return $collection
-            ->setEntry($this->parent)
-            ->setKey($this->getForeignKeyName());
+    /**
+     * Get the relation results.
+     *
+     * @param array $columns
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function get($columns = ['*'])
+    {
+        /* @var GridCollection $collection */
+        $collection = parent::get($columns);
+
+        $collection
+            ->setModel($this->parent)
+            ->setField($this->getForeignKeyName());
+
+        return $collection;
     }
 
     /**
