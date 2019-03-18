@@ -2,7 +2,7 @@
     "name": "anomaly/grid-field_type",
     "type": "streams-addon",
     "require": {
-        "anomaly/streams-platform": "^1.3"
+        "anomaly/streams-platform": "^1.6"
     },
     "autoload": {
         "psr-4": {
