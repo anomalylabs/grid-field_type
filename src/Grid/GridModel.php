@@ -95,7 +95,7 @@ class GridModel extends Model implements PresentableInterface
      * @param  string $id
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function morphTo($name = null, $type = null, $id = null)
+    public function morphTo($name = null, $type = null, $id = null, $ownerKey = null)
     {
         /**
          * Check that the grid relation still
@@ -108,6 +108,6 @@ class GridModel extends Model implements PresentableInterface
             );
         }
 
-        return parent::morphTo($name, $type, $id);
+        return parent::morphTo($name, $type, $id, $ownerKey);
     }
 }
