@@ -6,6 +6,7 @@ use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Anomaly\Streams\Platform\Entry\EntryCollection;
 use Anomaly\Streams\Platform\Field\Contract\FieldInterface;
 use Anomaly\Streams\Platform\Field\Contract\FieldRepositoryInterface;
+use Anomaly\Streams\Platform\Support\Decorator;
 use Anomaly\Streams\Platform\Ui\Form\Multiple\MultipleFormBuilder;
 
 /**
@@ -39,13 +40,13 @@ class GetMultiformFromRelation
      * Get the multiple form builder from the value.
      *
      * @param FieldRepositoryInterface $fields
-     * @param MultipleFormBuilder      $forms
+     * @param MultipleFormBuilder $forms
      * @return MultipleFormBuilder|null
      */
-    public function handle(FieldRepositoryInterface $fields, MultipleFormBuilder $forms)
+    public function handle(FieldRepositoryInterface $fields, MultipleFormBuilder $forms, Decorator $decorator)
     {
         /* @var EntryCollection $value */
-        if (!$value = $this->fieldType->getValue()) {
+        if (!$value = $decorator->undecorate($this->fieldType->getValue())) {
             return null;
         }
 
@@ -74,7 +75,7 @@ class GetMultiformFromRelation
 
             $form = $type
                 ->form($field, $entry->getStream(), $instance)
-                ->setEntry($entry);
+                ->setFormEntry($entry);
 
             $form->setReadOnly($this->fieldType->isReadOnly());
 
