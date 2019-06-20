@@ -62,7 +62,7 @@ class GridModel extends Model implements PresentableInterface
      */
     public function getEntry()
     {
-        return $this->entry;
+        return $this->getRelationshipFromMethod('entry');
     }
 
     /**
@@ -119,5 +119,19 @@ class GridModel extends Model implements PresentableInterface
         }
 
         return parent::morphTo($name, $type, $id, $ownerKey);
+    }
+
+    /**
+     * Return the model as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = parent::toArray();
+
+        $array['entry'] = $this->getEntry()->toArray();
+
+        return $array;
     }
 }

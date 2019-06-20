@@ -2,12 +2,14 @@
 
 use Anomaly\GridFieldType\Command\GetMultiformFromPost;
 use Anomaly\GridFieldType\Command\GetMultiformFromValue;
+use Anomaly\GridFieldType\Grid\GridCollection;
 use Anomaly\GridFieldType\Grid\GridModel;
 use Anomaly\GridFieldType\Grid\GridRelation;
 use Anomaly\GridFieldType\Validation\ValidateGrid;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
 use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Anomaly\Streams\Platform\Field\Contract\FieldInterface;
+use Anomaly\Streams\Platform\Model\EloquentModel;
 use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
 use Anomaly\Streams\Platform\Ui\Form\Multiple\MultipleFormBuilder;
@@ -234,9 +236,9 @@ class GridFieldType extends FieldType
     /**
      * Return a form builder instance.
      *
-     * @param FieldInterface  $field
+     * @param FieldInterface $field
      * @param StreamInterface $stream
-     * @param null            $instance
+     * @param null $instance
      * @return FormBuilder
      */
     public function form(FieldInterface $field, StreamInterface $stream, $instance = null)
@@ -253,7 +255,7 @@ class GridFieldType extends FieldType
             ->setOption('grid_title', $stream->getName())
             ->setOption('grid_prefix', $this->getFieldName())
             ->setOption('prefix', $this->getFieldName() . '_' . $instance . '_');
-        
+
         $builder
             ->setOption('form_view', $builder->getOption('form_view', 'anomaly.field_type.grid::form'))
             ->setOption('wrapper_view', $builder->getOption('wrapper_view', 'anomaly.field_type.grid::wrapper'));
@@ -337,5 +339,58 @@ class GridFieldType extends FieldType
                 ];
             }
         )->all();
+    }
+
+    /**
+     * Fired just before version comparison.
+     *
+     * @param EntryInterface|EloquentModel $entry
+     */
+    public function onVersioning(EntryInterface $entry)
+    {
+        $entry
+            ->unsetRelation(camel_case($this->getField()))
+            ->load(camel_case($this->getField()));
+    }
+
+    /**
+     * Fired just before version comparison.
+     *
+     * @param GridCollection $related
+     * @return array
+     */
+    public function toArrayForComparison(GridCollection $related)
+    {
+        return $related->map(
+            function (GridModel $model) {
+
+                $array = array_diff_key(
+                    $model->toArray(),
+                    array_flip(
+                        [
+                            'id',
+                            'sort_order',
+                            'created_at',
+                            'created_by_id',
+                            'updated_at',
+                            'updated_by_id',
+                            'deleted_at',
+                            'deleted_by_id',
+
+                            'field',
+                            'pivot',
+                        ]
+                    )
+                );
+
+                array_pull($array, 'entry.sort_order');
+                array_pull($array, 'entry.created_at');
+                array_pull($array, 'entry.created_by_id');
+                array_pull($array, 'entry.updated_at');
+                array_pull($array, 'entry.updated_by_id');
+
+                return $array;
+            }
+        )->toArray();
     }
 }
