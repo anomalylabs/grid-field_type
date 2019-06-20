@@ -41,6 +41,7 @@ class GetMultiformFromRelation
      *
      * @param FieldRepositoryInterface $fields
      * @param MultipleFormBuilder $forms
+     * @param Decorator $decorator
      * @return MultipleFormBuilder|null
      */
     public function handle(FieldRepositoryInterface $fields, MultipleFormBuilder $forms, Decorator $decorator)
