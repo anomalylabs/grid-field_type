@@ -1,4 +1,6 @@
-<?php namespace Anomaly\GridFieldType\Grid;
+<?php
+
+namespace Anomaly\GridFieldType\Grid;
 
 use Anomaly\Streams\Platform\Addon\Plugin\PluginCriteria;
 use Anomaly\Streams\Platform\Entry\EntryModel;
@@ -69,22 +71,19 @@ class GridCollection extends EloquentCollection
                 $name = $options->get('name', 'grid');
                 $path = trim($options->get('path', 'theme::grids'), '/') . '/';
 
-                return implode(
-                    $this->map(
-                        function ($grid) use ($path, $name, $options) {
+                return $this->map(
+                    function ($grid) use ($path, $name, $options) {
 
-                            /* @var GridModel $grid */
-                            return view(
-                                $path . $grid->type(),
-                                [
-                                    $name     => $grid,
-                                    'options' => $options,
-                                ]
-                            )->render();
-                        }
-                    )->all(),
-                    "\n"
-                );
+                        /* @var GridModel $grid */
+                        return view(
+                            $path . $grid->type(),
+                            array_merge([
+                                $name     => $grid,
+                                'options' => $options,
+                            ], $options->payload ?: [])
+                        )->render();
+                    }
+                )->implode("\n");
             }
         ))
             ->setModel($this->getModel())
@@ -136,5 +135,4 @@ class GridCollection extends EloquentCollection
 
         return $this;
     }
-
 }
