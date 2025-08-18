@@ -175,7 +175,7 @@ class GridFieldType extends FieldType
      */
     public function getInputValue($default = null)
     {
-        return $this->dispatch(new GetMultiformFromPost($this));
+        return dispatch_sync(new GetMultiformFromPost($this));
     }
 
     /**
@@ -270,7 +270,7 @@ class GridFieldType extends FieldType
      */
     public function forms()
     {
-        if (!$forms = $this->dispatch(new GetMultiformFromValue($this))) {
+        if (!$forms = dispatch_sync(new GetMultiformFromValue($this))) {
             return [];
         }
 

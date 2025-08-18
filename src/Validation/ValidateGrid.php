@@ -26,7 +26,7 @@ class ValidateGrid
     public function handle(GridFieldType $fieldType)
     {
         /* @var MultipleFormBuilder $forms */
-        if (!$forms = $this->dispatch(new GetMultiformFromPost($fieldType))) {
+        if (!$forms = dispatch_sync(new GetMultiformFromPost($fieldType))) {
             return true;
         }
 
