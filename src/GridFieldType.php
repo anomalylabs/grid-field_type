@@ -11,6 +11,7 @@ use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Anomaly\Streams\Platform\Field\Contract\FieldInterface;
 use Anomaly\Streams\Platform\Model\EloquentModel;
 use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
+use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
 use Anomaly\Streams\Platform\Ui\Form\Multiple\MultipleFormBuilder;
 use Illuminate\Contracts\Container\Container;
@@ -145,6 +146,56 @@ class GridFieldType extends FieldType
     public function getRelatedModel()
     {
         return (new GridModel())->setTable($this->getPivotTableName());
+    }
+
+    /**
+     * Return the entry models the field may relate to.
+     *
+     * @param  StreamRepositoryInterface $streams
+     * @return array
+     */
+    public function relatedModels(StreamRepositoryInterface $streams)
+    {
+        $related = (array)$this->config('related', []);
+
+        if (!$related) {
+            $related = array_map(
+                function (StreamInterface $stream) {
+                    return $stream->getEntryModelName();
+                },
+                $streams->findAllByNamespace('grid')->all()
+            );
+        }
+
+        return array_values(
+            array_filter(
+                $related,
+                function ($model) {
+                    return $this->allowedRelated($model);
+                }
+            )
+        );
+    }
+
+    /**
+     * Return whether a grid may relate to the given model.
+     *
+     * The class name is checked before anything is made, so a
+     * configuration naming something else is rejected rather
+     * than constructed.
+     *
+     * @param  mixed $model
+     * @return bool
+     */
+    protected function allowedRelated($model)
+    {
+        if (!is_string($model) || !is_subclass_of($model, EntryInterface::class)) {
+            return false;
+        }
+
+        $protected = (array)config('anomaly.field_type.grid::related.protected', []);
+
+        return !in_array($this->container->make($model)->getStreamNamespace(), $protected);
     }
 
     /**

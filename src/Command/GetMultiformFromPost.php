@@ -118,16 +118,7 @@ class GetMultiformFromPost
      */
     protected function related(StreamRepositoryInterface $streams)
     {
-        if ($related = (array)$this->fieldType->config('related', [])) {
-            return $related;
-        }
-
-        return array_map(
-            function (StreamInterface $stream) {
-                return $stream->getEntryModelName();
-            },
-            $streams->findAllByNamespace('grid')->all()
-        );
+        return $this->fieldType->relatedModels($streams);
     }
 
     /**

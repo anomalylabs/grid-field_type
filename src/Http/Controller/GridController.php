@@ -126,15 +126,6 @@ class GridController extends AdminController
      */
     protected function related(GridFieldType $type, StreamRepositoryInterface $streams)
     {
-        if ($related = (array)$type->config('related', [])) {
-            return $related;
-        }
-
-        return array_map(
-            function (StreamInterface $stream) {
-                return $stream->getEntryModelName();
-            },
-            $streams->findAllByNamespace('grid')->all()
-        );
+        return $type->relatedModels($streams);
     }
 }
