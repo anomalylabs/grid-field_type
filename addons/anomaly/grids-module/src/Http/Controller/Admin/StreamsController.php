@@ -17,6 +17,10 @@ class StreamsController extends AdminController
     /**
      * Return an index of grid streams.
      *
+     * The builders administer the streams stream rather than
+     * one of this module's own, so the permission convention
+     * derives nothing and each is set explicitly.
+     *
      * @param StreamTableBuilder $builder
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -24,10 +28,22 @@ class StreamsController extends AdminController
     {
         return $builder
             ->setNamespace('grid')
+            ->setOption('permission', 'anomaly.module.grids::grids.read')
+            ->setActions(
+                [
+                    'prompt' => [
+                        'permission' => 'anomaly.module.grids::grids.delete',
+                    ],
+                ]
+            )
             ->setButtons(
                 [
-                    'edit',
-                    'assignments',
+                    'edit'        => [
+                        'permission' => 'anomaly.module.grids::grids.write',
+                    ],
+                    'assignments' => [
+                        'permission' => 'anomaly.module.grids::grids.fields',
+                    ],
                 ]
             )
             ->render();
@@ -44,6 +60,7 @@ class StreamsController extends AdminController
         return $builder
             ->setPrefix('grid_')
             ->setNamespace('grid')
+            ->setOption('permission', 'anomaly.module.grids::grids.write')
             ->render();
     }
 
@@ -57,6 +74,7 @@ class StreamsController extends AdminController
     {
         return $builder
             ->setNamespace('grid')
+            ->setOption('permission', 'anomaly.module.grids::grids.write')
             ->render($this->route->parameter('id'));
     }
 }
