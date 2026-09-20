@@ -1,10 +1,12 @@
 <?php namespace Anomaly\GridFieldType;
 
+use Anomaly\GridFieldType\Listener\GuardFieldSlug;
 use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Addon\AddonIntegrator;
 use Anomaly\Streams\Platform\Addon\AddonServiceProvider;
 use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Anomaly\Streams\Platform\Entry\EntryModel;
+use Anomaly\Streams\Platform\Ui\Form\Event\FormWasBuilt;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
 use Illuminate\Contracts\Container\Container;
 
@@ -32,6 +34,17 @@ class GridFieldTypeServiceProvider extends AddonServiceProvider
         'grid-field_type/form/{field}/{stream}' => [
             'verb' => 'get',
             'uses' => 'Anomaly\GridFieldType\Http\Controller\GridController@form',
+        ],
+    ];
+
+    /**
+     * The addon event listeners.
+     *
+     * @var array
+     */
+    protected $listeners = [
+        FormWasBuilt::class => [
+            GuardFieldSlug::class,
         ],
     ];
 

@@ -17,6 +17,18 @@ class GridFieldTypeSchema extends FieldTypeSchema
 {
 
     /**
+     * The pivot table's own columns.
+     *
+     * @var array
+     */
+    protected $signature = [
+        'entry_id',
+        'entry_type',
+        'related_id',
+        'sort_order',
+    ];
+
+    /**
      * Add the field type's pivot table.
      *
      * @param Blueprint $table
@@ -25,6 +37,8 @@ class GridFieldTypeSchema extends FieldTypeSchema
     public function addColumn(Blueprint $table, AssignmentInterface $assignment)
     {
         $table = $table->getTable() . '_' . $this->fieldType->getField();
+
+        $this->guard($table);
 
         $this->schema->dropIfExists($table);
 
@@ -54,10 +68,11 @@ class GridFieldTypeSchema extends FieldTypeSchema
      */
     public function renameColumn(Blueprint $table, FieldType $from)
     {
-        $this->schema->rename(
-            $table->getTable() . '_' . $from->getField(),
-            $table->getTable() . '_' . $this->fieldType->getField()
-        );
+        $to = $table->getTable() . '_' . $this->fieldType->getField();
+
+        $this->guard($to);
+
+        $this->schema->rename($table->getTable() . '_' . $from->getField(), $to);
     }
 
     /**
@@ -67,8 +82,32 @@ class GridFieldTypeSchema extends FieldTypeSchema
      */
     public function dropColumn(Blueprint $table)
     {
-        $this->schema->dropIfExists(
-            $table->getTable() . '_' . $this->fieldType->getField()
+        $table = $table->getTable() . '_' . $this->fieldType->getField();
+
+        $this->guard($table);
+
+        $this->schema->dropIfExists($table);
+    }
+
+    /**
+     * Refuse to touch a table that is not a grid pivot.
+     *
+     * @param string $table
+     * @throws \RuntimeException
+     */
+    protected function guard($table)
+    {
+        if (!$this->schema->hasTable($table)) {
+            return;
+        }
+
+        if ($this->schema->hasColumns($table, $this->signature)) {
+            return;
+        }
+
+        throw new \RuntimeException(
+            "The table [{$table}] already exists and is not a grid pivot table. "
+            . "Rename the [{$this->fieldType->getField()}] field to avoid the collision."
         );
     }
 }
