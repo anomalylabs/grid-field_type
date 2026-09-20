@@ -51,15 +51,18 @@ class GetMultiformFromData
             return null;
         }
 
-        foreach ($value as $item) {
+        /* @var FieldInterface $field */
+        if (!$field = $fields->find($this->fieldType->id())) {
+            return null;
+        }
 
-            /* @var FieldInterface $field */
-            if (!$field = $fields->find($item['field'])) {
-                continue;
-            }
+        foreach ((array)$value as $item) {
+
+            $entry    = array_get((array)$item, 'entry');
+            $instance = array_get((array)$item, 'instance');
 
             /* @var StreamInterface $stream */
-            if (!$stream = $streams->find($item['stream'])) {
+            if (!$stream = $streams->find(array_get((array)$item, 'stream'))) {
                 continue;
             }
 
@@ -68,15 +71,15 @@ class GetMultiformFromData
 
             $type->setPrefix($this->fieldType->getPrefix());
 
-            $form = $type->form($field, $stream, $item['instance']);
+            $form = $type->form($field, $stream, $instance);
 
-            if ($item['entry']) {
-                $form->setEntry($item['entry']);
+            if ($entry) {
+                $form->setEntry($entry);
             }
 
             $form->setReadOnly($this->fieldType->isReadOnly());
 
-            $forms->addForm($this->fieldType->getFieldName() . '_' . $item['instance'], $form);
+            $forms->addForm($this->fieldType->getFieldName() . '_' . $instance, $form);
         }
 
         $forms->setOption('success_message', false);
