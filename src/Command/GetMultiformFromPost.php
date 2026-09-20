@@ -98,11 +98,7 @@ class GetMultiformFromPost
                 $form->setEntry($entry);
             }
 
-            try {
-                $form->build();
-            } catch(\Exception $e) {
-                dd($item);
-            }
+            $form->build();
 
             $form->setReadOnly($this->fieldType->isReadOnly());
 
