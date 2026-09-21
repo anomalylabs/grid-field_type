@@ -167,12 +167,27 @@ class GridFieldType extends FieldType
             );
         }
 
+        $related = array_filter(
+            $related,
+            function ($model) {
+                return $this->allowedRelated($model);
+            }
+        );
+
+        /*
+         * An addon may bind its own model over the generated
+         * one, and the bound class is what a stream, a saved
+         * row and the pivot table all name. Resolving here
+         * means either name may be configured.
+         */
         return array_values(
-            array_filter(
-                $related,
-                function ($model) {
-                    return $this->allowedRelated($model);
-                }
+            array_unique(
+                array_map(
+                    function ($model) {
+                        return get_class($this->container->make($model));
+                    },
+                    $related
+                )
             )
         );
     }
@@ -187,7 +202,7 @@ class GridFieldType extends FieldType
      * @param  mixed $model
      * @return bool
      */
-    protected function allowedRelated($model)
+    public function allowedRelated($model)
     {
         if (!is_string($model) || !is_subclass_of($model, EntryInterface::class)) {
             return false;

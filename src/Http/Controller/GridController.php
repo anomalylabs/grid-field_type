@@ -93,7 +93,7 @@ class GridController extends AdminController
          * relate to. Without this the parameter addresses
          * every stream in the installation.
          */
-        if (!in_array($stream->getEntryModelName(), $this->related($type, $streams))) {
+        if (!in_array($stream->getBoundEntryModelName(), $this->related($type, $streams))) {
             abort(404);
         }
 

@@ -68,22 +68,24 @@ class GetMultiformFromPost
                 continue;
             }
 
-            $model = $stream->getEntryModelName();
+            $model = $stream->getBoundEntryModelName();
 
-            /*
-             * Only the streams this field is configured to
-             * relate to. Without this the posted parameter
-             * addresses every stream in the installation.
-             */
-            if (!in_array($model, $related)) {
+            if (!$this->fieldType->allowedRelated($model)) {
                 continue;
             }
 
             /*
-             * Only rows already attached to this entry. Anything
-             * else belongs to another entry, or does not exist.
+             * An existing row is identified by the entry it is
+             * attached to, a new one by the streams this field
+             * relates to. Without either the posted parameter
+             * addresses every stream in the installation.
              */
-            if ($entry && !in_array($model . '|' . $entry, $attached)) {
+            if ($entry) {
+
+                if (!in_array($model . '|' . $entry, $attached)) {
+                    continue;
+                }
+            } elseif (!in_array($model, $related)) {
                 continue;
             }
 
