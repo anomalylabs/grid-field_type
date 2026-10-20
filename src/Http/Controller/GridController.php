@@ -6,6 +6,10 @@ use Anomaly\Streams\Platform\Field\Contract\FieldRepositoryInterface;
 use Anomaly\Streams\Platform\Http\Controller\PublicController;
 use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
 use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
+use Anomaly\Streams\Platform\Ui\Form\Command\LoadForm;
+use Anomaly\Streams\Platform\Ui\Form\Command\MakeForm;
+use Anomaly\Streams\Platform\Ui\Form\Command\PopulateFields;
+use Anomaly\Streams\Platform\Ui\Form\Command\SetFormResponse;
 
 /**
  * Class GridController
@@ -81,9 +85,21 @@ class GridController extends PublicController
 
         $type->setPrefix($this->request->get('prefix'));
 
-        return $type
+        $builder = $type
             ->form($field, $stream, $this->request->get('instance'))
-            ->addFormData('field_type', $type)
-            ->render();
+            ->addFormData('field_type', $type);
+
+        /*
+         * Build and render the markup only. Calling render()
+         * would run make() -> post(), which saves the form.
+         */
+        $builder->build();
+
+        $this->dispatchNow(new PopulateFields($builder));
+        $this->dispatchNow(new LoadForm($builder));
+        $this->dispatchNow(new MakeForm($builder));
+        $this->dispatchNow(new SetFormResponse($builder));
+
+        return $builder->getFormResponse();
     }
 }

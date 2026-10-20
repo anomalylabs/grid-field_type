@@ -25,8 +25,14 @@ class GridFieldTypeServiceProvider extends AddonServiceProvider
      * @var array
      */
     protected $routes = [
-        'grid-field_type/choose/{field}'        => 'Anomaly\GridFieldType\Http\Controller\GridController@choose',
-        'grid-field_type/form/{field}/{stream}' => 'Anomaly\GridFieldType\Http\Controller\GridController@form',
+        'grid-field_type/choose/{field}'        => [
+            'verb' => 'get',
+            'uses' => 'Anomaly\GridFieldType\Http\Controller\GridController@choose',
+        ],
+        'grid-field_type/form/{field}/{stream}' => [
+            'verb' => 'get',
+            'uses' => 'Anomaly\GridFieldType\Http\Controller\GridController@form',
+        ],
     ];
 
     /**
