@@ -70,6 +70,7 @@ class GridCollection extends EloquentCollection
                 $path = trim($options->get('path', 'theme::grids'), '/') . '/';
 
                 return implode(
+                    "\n",
                     $this->map(
                         function ($grid) use ($path, $name, $options) {
 
@@ -82,8 +83,7 @@ class GridCollection extends EloquentCollection
                                 ]
                             )->render();
                         }
-                    )->all(),
-                    "\n"
+                    )->all()
                 );
             }
         ))
